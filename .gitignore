@@ -3,3 +3,4 @@ __pycache__/
 *.pyc
 python_nightscout.egg-info
 dist/*
+build/*
