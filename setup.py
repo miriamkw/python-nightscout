@@ -7,20 +7,9 @@ https://github.com/nightscout/cgm-remote-monitor
 
 # Always prefer setuptools over distutils
 from setuptools import setup, find_packages
-# To use a consistent encoding
-from codecs import open
-from os import path
-try:
-    from pypandoc import convert
-    read_md = lambda f: convert(f, 'rst')
-except ImportError:
-    print("warning: pypandoc module not found, could not convert Markdown to RST")
-    read_md = lambda f: open(f, 'r').read()
 
-here = path.abspath(path.dirname(__file__))
-
-# Get the long description from the README file
-long_description=read_md('README.md')
+with open("README.md", "r") as fh:
+    long_description = fh.read()
 
 setup(
     name='python-nightscout',
@@ -32,6 +21,8 @@ setup(
 
     description='A library that provides a Python interface to Nightscout',
     long_description=long_description,
+    long_description_content_type="text/markdown",
+
 
     # The project's main homepage.
     url='https://github.com/ps2/python-nightscout',
@@ -53,7 +44,7 @@ setup(
 
         # Indicate who your project is intended for
         'Intended Audience :: Developers',
-        'Topic :: Software Development :: API Client',
+        # 'Topic :: Software Development :: API Client', # This is invalid for uplaod to PyPi
 
         # Pick your license as you wish (should match "license" above)
         'License :: OSI Approved :: MIT License',
