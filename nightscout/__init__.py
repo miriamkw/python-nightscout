@@ -2,6 +2,7 @@
 from .models import (
     SGV,
     Treatment,
+    Activity,
     ProfileDefinition,
     ProfileDefinitionSet,
 )

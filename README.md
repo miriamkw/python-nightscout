@@ -2,7 +2,8 @@
 
 [![Build Status](https://travis-ci.org/ps2/python-nightscout.svg?branch=master)](https://travis-ci.org/ps2/python-nightscout)
 
-A simple python client for accessing data stored in [Nightscout](https://github.com/nightscout/cgm-remote-monitor)
+A simple python client for accessing data stored in [Nightscout](https://github.com/nightscout/cgm-remote-monitor). In this fork has,
+in addition to the original functionality, a schema for reading physical activities. 
 
 ## Example Usage
 
@@ -31,6 +32,12 @@ To fetch recent treatments (boluses, temp basals):
 
 	treatments = api.get_treatments()
 	print([treatment.eventType for treatment in treatments])
+
+### Activities
+To fetch recent activities (workouts and heart rate):
+
+	activities = api.get_activities()
+	print([activity.eventType for activity in activities])
 
 ### Profiles
 

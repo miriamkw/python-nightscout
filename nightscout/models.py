@@ -112,6 +112,46 @@ class Treatment(BaseModel):
             json_data['created_at'] = dateutil.parser.parse(json_data['created_at'])
 
 
+class Activity(BaseModel):
+    """Nightscout Treatment
+
+    Represents an entry in the Nightscout activity store, such as workouts and heart rate.
+    Some of the following attributes will be set to None, depending on the type of entry.
+
+    Attributes:
+        eventType (string): The event type. Examples: ['Exercise', 'Heart Rate'].
+        timestamp (datetime): The time of the event.
+        heartrate (int): The heart rate value.
+        activityType (string): Type of exercise. Examples: ['Cycling', 'Walking'].
+        duration (int): Duration in minutes for an exercise event.
+    """
+    def __init__(self, **kwargs):
+        self.param_defaults = {
+            'eventType': None,
+            'timestamp': None,
+            'heartrate': None,
+            'activityType': None,
+            'duration': None,
+        }
+
+        for (param, default) in self.param_defaults.items():
+            setattr(self, param, kwargs.get(param, default))
+
+    def __repr__(self):
+        return "%s %s" % (self.timestamp, self.eventType)
+
+    @classmethod
+    def json_transforms(cls, json_data):
+        timestamp = json_data.get('timestamp')
+        if timestamp:
+            if type(timestamp) == int:
+                json_data['timestamp'] = datetime.fromtimestamp(timestamp / 1000.0, pytz.utc)
+            else:
+                json_data['timestamp'] = dateutil.parser.parse(timestamp)
+        if json_data.get('created_at'):
+            json_data['created_at'] = dateutil.parser.parse(json_data['created_at'])
+
+
 class ScheduleEntry(BaseModel):
     """ScheduleEntry
 

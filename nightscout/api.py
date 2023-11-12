@@ -4,6 +4,7 @@ import hashlib
 from nightscout import (
     SGV,
     Treatment,
+    Activity,
     ProfileDefinition,
     ProfileDefinitionSet,
 )
@@ -75,3 +76,117 @@ class Api(object):
         """
         r = requests.get(self.site_url + '/api/v1/profile.json', headers=self.request_headers(), params=params)
         return ProfileDefinitionSet.new_from_json_array(r.json())
+
+    def get_activities(self, params={}):
+        """Fetch treatments
+        Args:
+          params:
+            Mongodb style query params. For example, you can do things like:
+                get_activities({'count':0, 'find[timestamp][$gte]': '2017-03-07T01:10:26.000Z'})
+        Returns:
+          A list of activities
+        """
+        r = requests.get(self.site_url + '/api/v1/activity.json', headers=self.request_headers(), params=params)
+        if len(r.content) > 0:
+            return [Activity.new_from_json_dict(x) for x in r.json()]
+        else:
+            return []
+
+
+    def create_activity(self):
+        """
+        Create a new activity in the API.
+        Args:
+            activity_data: A dictionary containing the data for the new activity.
+
+        Returns:
+            The response from the API.
+        """
+        activity_data = [
+            {
+                "timestamp": "2023-10-18T08:30:00.000Z",
+                "created_at": "2023-10-18T08:30:00.000Z",
+                "activity_type": "Running",
+                #"duration_minutes": 60,
+                #"distance_km": 5.0,
+                #"calories_burned": 400
+            },
+            {
+                "timestamp": "2023-10-18T12:00:00.000Z",
+                "created_at": "2023-10-18T12:00:00.000Z",
+                "type": "Cycling",
+                "duration": 100,
+                "eventType": "Cycling",
+                #"duration_minutes": 45,
+                #"distance_km": 10.0,
+                #"calories_burned": 300
+            }
+        ]
+
+        url = self.site_url + '/api/v1/activity.json'
+        response = requests.post(url, json=activity_data, headers=self.request_headers())
+
+        if response.status_code == 201:
+            # Activity created successfully
+            return response.json()
+        else:
+            # Handle error
+            print(f"Error creating activity. Status code: {response.status_code}")
+            return None
+
+    def create_heartrate(self):
+        """
+        Create a new activity in the API.
+        Args:
+            activity_data: A dictionary containing the data for the new activity.
+
+        Returns:
+            The response from the API.
+        """
+        activity_data = [
+            {
+                "timestamp": "2023-10-18T08:30:00.000Z",
+                "created_at": "2023-10-18T08:30:00.000Z",
+                "activity_type": "Heartrate",
+                "value": 70,
+                #"duration_minutes": 60,
+                #"distance_km": 5.0,
+                #"calories_burned": 400
+            },
+            {
+                "timestamp": "2023-10-18T12:00:00.000Z",
+                "created_at": "2023-10-18T12:00:00.000Z",
+                "eventType": "Heartrate",
+                "value": 80,
+                #"duration_minutes": 45,
+                #"distance_km": 10.0,
+                #"calories_burned": 300
+            }
+        ]
+
+        url = self.site_url + '/api/v1/activity.json'
+        response = requests.post(url, json=activity_data, headers=self.request_headers())
+
+        if response.status_code == 201:
+            # Activity created successfully
+            return response.json()
+        else:
+            # Handle error
+            print(f"Error creating activity. Status code: {response.status_code}")
+            return None
+
+    def get_heartrate(self, params={}):
+        """Fetch treatments
+        Args:
+          params:
+            Mongodb style query params. For example, you can do things like:
+                get_treatments({'count':0, 'find[timestamp][$gte]': '2017-03-07T01:10:26.000Z'})
+        Returns:
+          A list of activities
+        """
+        r = requests.get(self.site_url + '/api/v1/activity.json', headers=self.request_headers(), params=params)
+        if len(r.content) > 0:
+            return [Treatment.new_from_json_dict(x) for x in r.json()]
+        else:
+            return []
+
